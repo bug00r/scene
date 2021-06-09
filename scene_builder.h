@@ -8,6 +8,7 @@
 #define SCENE_BUILDER_H
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "vec.h"
 #include "mesh_builder.h"
 #include "scene.h"
@@ -34,5 +35,10 @@ scene_t * scene_create_texture_test();
 	//Creates a tree
 #endif
 scene_t * scene_create_tree();
+
+#if 0
+	//creates waterfall from float array
+#endif
+scene_t * scene_create_waterfall_diagram(float *array, uint32_t rows, uint32_t cols);
 
 #endif

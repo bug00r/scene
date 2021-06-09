@@ -242,8 +242,9 @@ scene_create_test_point_raster() {
 	
 	return scene;
 }
+
 scene_t * 
-scene_create_test_cube(){
+scene_create_test_cube() {
 	scene_t * scene = alloc_scene(1);
 	vec3_t center = { 0.f, 0.f, 0.f };
 	scene->meshes[0] = create_cube3_center(&center, .5f);
@@ -254,5 +255,29 @@ scene_create_test_cube(){
 	mat_mul_mesh(scene->meshes[0], rotx_mat);
 	free(rotx_mat);
 	
+	return scene;
+}
+
+scene_t * 
+scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
+	int32_t rows = (int32_t)(_rows);
+	int32_t cols = (int32_t)(_cols);
+	float *array = _array;
+
+	scene_t * scene = alloc_scene(rows*cols);
+
+	for (int32_t cur_row = rows; --cur_row;) {
+		size_t row_offset = cur_row * cols;
+		for (int32_t cur_col = cols; --cur_col;) {
+			float cur_val = array[row_offset + cur_col];
+			printf("r: %i c: %i = %f \n", cur_row, cur_col, cur_val);
+			//don't foget the offset
+			if ( cur_col == 1 ) {
+				cur_val = array[row_offset + cur_col-1];
+				printf("r: %i c: %i = %f \n", cur_row-1, cur_col-1, cur_val);
+			}
+		}
+	}
+
 	return scene;
 }

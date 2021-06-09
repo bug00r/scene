@@ -16,14 +16,16 @@ alloc_scene(const unsigned int meshcount){
 
 void 
 free_scene(scene_t *scene){
-	for(int mesh = 0; mesh < scene->cntMesh; ++mesh){
-		mesh_t * curmesh = scene->meshes[mesh]; 
-		if (curmesh != NULL) {
-			free_mesh(curmesh);
+	if ( scene != NULL ) {
+		for(int mesh = 0; mesh < scene->cntMesh; ++mesh){
+			mesh_t * curmesh = scene->meshes[mesh]; 
+			if (curmesh != NULL) {
+				free_mesh(curmesh);
+			}
 		}
+		free(scene->meshes);
+		free(scene);
 	}
-	free(scene->meshes);
-	free(scene);
 }
 
 void 
