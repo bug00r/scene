@@ -260,24 +260,11 @@ scene_create_test_cube() {
 
 scene_t * 
 scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
-	int32_t rows = (int32_t)(_rows);
-	int32_t cols = (int32_t)(_cols);
-	float *array = _array;
-
-	scene_t * scene = alloc_scene(rows*cols);
-
-	for (int32_t cur_row = rows; --cur_row;) {
-		size_t row_offset = cur_row * cols;
-		for (int32_t cur_col = cols; --cur_col;) {
-			float cur_val = array[row_offset + cur_col];
-			printf("r: %i c: %i = %f \n", cur_row, cur_col, cur_val);
-			//don't foget the offset
-			if ( cur_col == 1 ) {
-				cur_val = array[row_offset + cur_col-1];
-				printf("r: %i c: %i = %f \n", cur_row-1, cur_col-1, cur_val);
-			}
-		}
-	}
-
+	scene_t * scene = alloc_scene(2);
+	scene->meshes[0] = create_raster(10.0f);
+	scene->meshes[1] = create_hmap_from_array(_array, _rows, _cols);
+	scale_mesh(scene->meshes[1], 0.5f, 1.0f, 0.2f);
+	mesh_create_bbox(scene->meshes[1]);
+	mesh_color_by_bbox2(scene->meshes[1]);
 	return scene;
 }
