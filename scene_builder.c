@@ -265,14 +265,14 @@ scene_create_test_cube() {
 */
 scene_t * 
 scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
-	/*scene_t * scene = alloc_scene(2);
-	scene->meshes[0] = create_center();
+	scene_t * scene = alloc_scene(2);
+	scene->meshes[0] = create_raster(5.f);
 	scene->meshes[1] = create_hmap_from_array(_array, _rows, _cols);
 	scale_mesh(scene->meshes[1], 0.5f, 1.0f, 0.2f);
 	mesh_create_bbox(scene->meshes[1]);
 	mesh_color_by_bbox2(scene->meshes[1]);
-	*/
-	float size = 0.05f;
+	
+	/*float size = 0.02f;
 	scene_t * scene = alloc_scene(5);
 	scene->meshes[0] = create_center();
 
@@ -294,7 +294,7 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 	color = (cRGB_t ){ 0.f, 1.f, 0.f};
 	center = (vec3_t){ 0.f, 1.f, 0.f };
 	scene->meshes[4] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[4], &color);
+	mesh_set_color(scene->meshes[4], &color);*/
 
 	return scene;
 }
