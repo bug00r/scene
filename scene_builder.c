@@ -274,27 +274,28 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 	
 	/*float size = 0.02f;
 	scene_t * scene = alloc_scene(5);
-	scene->meshes[0] = create_center();
 
 	cRGB_t color = { .5f, .5f, .5f};
 	vec3_t center = { 0.f, 0.f, 0.f };
-	scene->meshes[1] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[1], &color);
+	scene->meshes[0] = create_cube3_center(&center, size);
+	mesh_set_color(scene->meshes[0], &color);
 
 	color = (cRGB_t ){ 1.f, 0.f, 0.f};
 	center = (vec3_t){ 0.f, 0.f, 1.f };
-	scene->meshes[2] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[2], &color);
+	scene->meshes[1] = create_cube3_center(&center, size);
+	mesh_set_color(scene->meshes[1], &color);
 
 	color = (cRGB_t ){ 0.f, 0.f, 1.f};
 	center = (vec3_t){ 1.f, 0.f, 0.f };
-	scene->meshes[3] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[3], &color);
+	scene->meshes[2] = create_cube3_center(&center, size);
+	mesh_set_color(scene->meshes[2], &color);
 
 	color = (cRGB_t ){ 0.f, 1.f, 0.f};
 	center = (vec3_t){ 0.f, 1.f, 0.f };
-	scene->meshes[4] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[4], &color);*/
+	scene->meshes[3] = create_cube3_center(&center, size);
+	mesh_set_color(scene->meshes[3], &color);
 
+	scene->meshes[4] = create_center();
+	*/
 	return scene;
 }
