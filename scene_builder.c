@@ -265,15 +265,18 @@ scene_create_test_cube() {
 */
 scene_t * 
 scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
-	scene_t * scene = alloc_scene(5);
+	scene_t * scene = alloc_scene(7 + _cols + _cols + _rows + _rows);
+	uint32_t cntMesh = 0;
 	//scene->meshes[0] = create_raster(5.f);
-	scene->meshes[0] = create_hmap_from_array(_array, _rows, _cols);
-	mesh_t *map = scene->meshes[0];
+	//scene->meshes[cntMesh++] = create_point_raster();
+	scene->meshes[cntMesh] = create_hmap_from_array(_array, _rows, _cols);
+	
+	mesh_t *map = scene->meshes[cntMesh++];
 	scale_mesh(map, 0.5f, 1.0f, 0.2f);
 	mesh_create_bbox(map);
 	mesh_color_by_bbox2(map);
 	
-	cRGB_t line_col = { 1.f, 0.f, 0.f };
+	cRGB_t line_col = { .5f, .5f, .5f };
 	for(unsigned int shape = 0; shape < map->cntShapes; ++shape){
 		shape_t * curshape = map->shapes[shape];
 		if ( curshape->cntVertex == 2 ) {
@@ -282,7 +285,7 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 	}
 
 	bbox_t *bbox = &map->bbox;
-	line_col = (cRGB_t){ 0.f, 0.f, 1.f };
+	line_col = (cRGB_t){ .5f, .5f, .5f };
 	if (bbox->created) {
 		vec3_t *bbmin = &bbox->min;
 		vec3_t *bbmax = &bbox->max;
@@ -291,27 +294,27 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 		vec3_set_values(&start, bbmin->x, bbmin->y, bbmin->z);
 		vec3_set_values(&end, bbmin->x, 1.f, bbmin->z);
 		
-		scene->meshes[1] = create_line3(&start, &end);
-		mesh_set_color (scene->meshes[1], &line_col);
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 		vec3_set_values(&start, bbmax->x, bbmin->y, bbmin->z);
 		vec3_set_values(&end, bbmax->x, 1.f, bbmin->z);
 		
-		scene->meshes[2] = create_line3(&start, &end);
-		mesh_set_color (scene->meshes[2], &line_col);
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 		vec3_set_values(&start, bbmin->x, bbmin->y, bbmax->z);
 		vec3_set_values(&end, bbmin->x, 1.f, bbmax->z);
 		
-		scene->meshes[3] = create_line3(&start, &end);
-		mesh_set_color (scene->meshes[3], &line_col);
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 
 		vec3_set_values(&start, bbmax->x, bbmin->y, bbmax->z);
 		vec3_set_values(&end, bbmax->x, 1.f, bbmax->z);
 
-		scene->meshes[4] = create_line3(&start, &end);
-		mesh_set_color (scene->meshes[4], &line_col);
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 		//map->shapes[cnt_shape++] = create_shape_line3(&lb, &rb);
 		//map->shapes[cnt_shape++] = create_shape_line3(&lb, &lt);
@@ -320,59 +323,53 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 		vec3_t h_vec, v_vec;
 		vec3_sub_dest(&h_vec, &first_h_line->vertices[1]->vec, &first_h_line->vertices[0]->vec);
 		vec3_sub_dest(&v_vec, &first_v_line->vertices[1]->vec, &first_v_line->vertices[0]->vec);
+		
+		float axis_offset = 0.2f;
+		//x Axis 
+		vec3_set_values(&start, bbmin->x, 0.f, bbmin->z - axis_offset);
+		vec3_set_values(&end, bbmax->x, 0.f, bbmin->z - axis_offset);
 
-		/*
-			typedef struct {
-			vec3_t vec;
-			cRGB_t color;
-			vec2_t texCoord;
-		} vertex_t;
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
-		typedef struct {
-			int texId;
-			unsigned int cntVertex;
-			vertex_t ** vertices;
-		} shape_t;
-		*/
+		float axis_step_len = .05f;
+		for (uint32_t cur_col = 0; cur_col < _cols; cur_col++) {
+			float cur_x = bbmin->x + (h_vec.x * cur_col);
+			float base_z = bbmin->z - axis_offset;
+			vec3_set_values(&start, cur_x, 0.f, base_z - axis_step_len);
+			vec3_set_values(&end, cur_x, 0.f, base_z + 2.f*axis_step_len);
 
+			scene->meshes[cntMesh] = create_line3(&start, &end);
+			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+
+			start.z -= 0.2f;
+			scene->meshes[cntMesh] = create_point3(&start);
+			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+		}
+		
+
+		//z Axis 
+		vec3_set_values(&start, bbmin->x - axis_offset, 0.f, bbmin->z);
+		vec3_set_values(&end, bbmin->x - axis_offset, 0.f, bbmax->z);
+
+		scene->meshes[cntMesh] = create_line3(&start, &end);
+		mesh_set_color (scene->meshes[cntMesh++], &line_col);
+
+		for (uint32_t cur_row = 0; cur_row < _rows; cur_row++) {
+			float cur_z = bbmin->z - (v_vec.z * cur_row);
+			float base_x = bbmin->x - axis_offset;
+			vec3_set_values(&start, base_x - axis_step_len, 0.f, cur_z);
+			vec3_set_values(&end, base_x + 2.f*axis_step_len, 0.f,cur_z);
+
+			scene->meshes[cntMesh] = create_line3(&start, &end);
+			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+
+			start.x -= 0.2f;
+			scene->meshes[cntMesh] = create_point3(&start);
+			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+		}
+		
 	}
 
-	/*typedef struct {
-	vec3_t min;
-	vec3_t max;
-	bool created;
-	} bbox_t;
-	typedef struct {
-		unsigned int cntShapes;
-		bbox_t bbox;
-		shape_t ** shapes;
-	} mesh_t;*/
-
-
-	/*float size = 0.02f;
-	scene_t * scene = alloc_scene(5);
-
-	cRGB_t color = { .5f, .5f, .5f};
-	vec3_t center = { 0.f, 0.f, 0.f };
-	scene->meshes[0] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[0], &color);
-
-	color = (cRGB_t ){ 1.f, 0.f, 0.f};
-	center = (vec3_t){ 0.f, 0.f, 1.f };
-	scene->meshes[1] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[1], &color);
-
-	color = (cRGB_t ){ 0.f, 0.f, 1.f};
-	center = (vec3_t){ 1.f, 0.f, 0.f };
-	scene->meshes[2] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[2], &color);
-
-	color = (cRGB_t ){ 0.f, 1.f, 0.f};
-	center = (vec3_t){ 0.f, 1.f, 0.f };
-	scene->meshes[3] = create_cube3_center(&center, size);
-	mesh_set_color(scene->meshes[3], &color);
-
-	scene->meshes[4] = create_center();
-	*/
 	return scene;
 }
