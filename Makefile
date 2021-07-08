@@ -38,11 +38,18 @@ ifeq ($(OUTPUT),1)
 	export outimg= -Doutput=1
 endif
 
-CFLAGS=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra -O1 $(debug)
+BIT_SUFFIX=
+
+ifeq ($(M32),1)
+	CFLAGS+=-m32
+	BIT_SUFFIX+=32
+endif
+
+CFLAGS+=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra $(debug)
 #-ggdb
 #-pg for profiling 
 
-LIB?=-L/c/dev/lib
+LIB?=-L/c/dev/lib$(BIT_SUFFIX)
 INCLUDE?=-I/c/dev/include -I.
 
 SRC=scene.c scene_builder.c
@@ -84,7 +91,7 @@ clean:
 
 install:
 	mkdir -p $(INSTALL_ROOT)include
-	mkdir -p $(INSTALL_ROOT)lib
+	mkdir -p $(INSTALL_ROOT)lib$(BIT_SUFFIX)
 	cp ./scene.h $(INSTALL_ROOT)include/scene.h
 	cp ./scene_builder.h $(INSTALL_ROOT)include/scene_builder.h
-	cp $(BUILDPATH)$(LIBNAME) $(INSTALL_ROOT)lib/$(LIBNAME)
+	cp $(BUILDPATH)$(LIBNAME) $(INSTALL_ROOT)lib$(BIT_SUFFIX)/$(LIBNAME)
