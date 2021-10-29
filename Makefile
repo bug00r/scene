@@ -61,7 +61,7 @@ OBJS=$(BUILDPATH)scene.o $(BUILDPATH)scene_builder.o
 
 TESTSRC=test_scene.c
 TESTBIN=test_scene.exe
-TESTLIB=-lscene -lmesh -lshape -lcolor -lutilsmath -lmat -lvec  
+TESTLIB=-lscene -lmesh -lshape -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
 TESTLIBDIR=-L$(BUILDDIR) $(LIB)
 
 all: mkbuilddir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test

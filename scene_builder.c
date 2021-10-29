@@ -258,11 +258,36 @@ scene_create_test_cube() {
 	return scene;
 }
 
-/*
-	const cRGB_t col_x = {0.f, 0.f, 1.f};
-	const cRGB_t col_z = {1.f, 0.f, 0.f};
-	const cRGB_t col_y = {0.f, 1.f, 0.f};
-*/
+scene_t * scene_create_polys() {
+	scene_t *poly_scene = alloc_scene(3);
+	
+	vec3_t points[8] = { {.5f, .0f, .0f} , { .5f, 1.0f, .0f}, { .0f, 1.0f, .0f}  , { .0f, 1.4f, .0f}, 
+						 {1.4f, 1.4f, .0f}, { 1.4f, 1.0f, .0f}, { 0.9f, 1.0f, .0f}, { .9f, .0f, .0f}};
+
+
+	poly_scene->meshes[0] = create_polygon3(points, 8);
+	translate_mesh(poly_scene->meshes[0], -1.7, 0.f, 0.f);
+	
+	vec3_t points2[14] = { {0.f, .0f, .0f} , { .0f, .8f, .0f}, { .2f, 1.1f, .0f}  , { .3f, 1.4f, .0f}, 
+						 {.5f, 1.1f, .0f}, { .8f, 0.9f, .0f}, { 1.f, 1.2f, .0f}, { 1.0f, 0.7f, .0f},
+						 { 0.7f, 0.6f, .0f}, { 1.0f, 0.4f, .0f}, { 0.7f, .0f, .0f}, { .5f, .2f, .0f},
+						 { .3f, .0f, .0f}, { 0.2f, 0.2f, .0f}};
+
+
+	poly_scene->meshes[1] = create_polygon3(points2, 14);
+
+	vec3_t points3[10] = { {0.f, .0f, .0f} , { .0f, 1.1f, .0f}, { .3f, .8f, .0f}  , { .6f, 1.1f, .0f}, 
+						 {.4f, .6f, .0f}, { .1f, 0.9f, .0f}, { .1f, .3f, .0f}, { .4f, .5f, .0f},
+						 { 0.6f, 0.1f, .0f}, { .3f, 0.3f, .0f}};
+
+
+	poly_scene->meshes[2] = create_polygon3(points3, 10);
+	translate_mesh(poly_scene->meshes[2], -1.7, -1.7f, 0.f);
+
+	return poly_scene;
+
+}
+
 scene_t * 
 scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 	scene_t * scene = alloc_scene(7 + _cols + _cols + _rows + _rows);

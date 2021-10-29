@@ -37,6 +37,11 @@ scene_t * scene_create_texture_test();
 scene_t * scene_create_tree();
 
 #if 0
+	//Creates a polygon
+#endif
+scene_t * scene_create_polys();
+
+#if 0
 	//creates waterfall from float array
 #endif
 scene_t * scene_create_waterfall_diagram(float *array, uint32_t rows, uint32_t cols);
