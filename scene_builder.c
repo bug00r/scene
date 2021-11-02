@@ -259,22 +259,23 @@ scene_create_test_cube() {
 }
 
 scene_t * scene_create_polys() {
-	scene_t *poly_scene = alloc_scene(3);
+	scene_t *poly_scene = alloc_scene(6);
 	
+
 	vec3_t points[8] = { {.5f, .0f, .0f} , { .5f, 1.0f, .0f}, { .0f, 1.0f, .0f}  , { .0f, 1.4f, .0f}, 
 						 {1.4f, 1.4f, .0f}, { 1.4f, 1.0f, .0f}, { 0.9f, 1.0f, .0f}, { .9f, .0f, .0f}};
 
 
 	poly_scene->meshes[0] = create_polygon3(points, 8);
-	translate_mesh(poly_scene->meshes[0], -1.7, 0.f, 0.f);
 	
+
 	vec3_t points2[14] = { {0.f, .0f, .0f} , { .0f, .8f, .0f}, { .2f, 1.1f, .0f}  , { .3f, 1.4f, .0f}, 
 						 {.5f, 1.1f, .0f}, { .8f, 0.9f, .0f}, { 1.f, 1.2f, .0f}, { 1.0f, 0.7f, .0f},
 						 { 0.7f, 0.6f, .0f}, { 1.0f, 0.4f, .0f}, { 0.7f, .0f, .0f}, { .5f, .2f, .0f},
 						 { .3f, .0f, .0f}, { 0.2f, 0.2f, .0f}};
 
-
 	poly_scene->meshes[1] = create_polygon3(points2, 14);
+	
 
 	vec3_t points3[10] = { {0.f, .0f, .0f} , { .0f, 1.1f, .0f}, { .3f, .8f, .0f}  , { .6f, 1.1f, .0f}, 
 						 {.4f, .6f, .0f}, { .1f, 0.9f, .0f}, { .1f, .3f, .0f}, { .4f, .5f, .0f},
@@ -282,8 +283,60 @@ scene_t * scene_create_polys() {
 
 
 	poly_scene->meshes[2] = create_polygon3(points3, 10);
-	translate_mesh(poly_scene->meshes[2], -1.7, -1.7f, 0.f);
+	
+	
 
+	vec3_t points4[22] = {	{1.f, .0f, .0f}, { .0f, .0f, .0f }, { .0f, 1.f, .0f}  , { 1.f, 1.f, .0f}, 
+						 	{1.f, .2f, .0f}, { .2f, 0.2f, .0f}, { .2f, .8f, .0f}, { .8f, .8f, .0f}, { .8f, .4f, .0f},
+						 	{ 0.4f, 0.4f, .0f}, { .4f, 0.6f, .0f} ,{.5f, .6f, .0f} , { .5f, .5f, .0f}, { .7f, .5f, .0f}, 
+						 	{.7f, .7f, .0f}, { .3f, .7f, .0f}, { .3f, .3f, .0f}, { .9f, .3f, .0f},
+						 	{ 0.9f, 0.9f, .0f}, { .1f, 0.9f, .0f}, { 0.1f, 0.1f, .0f}, { 1.f, 0.1f, .0f}
+						};
+
+
+	poly_scene->meshes[3] = create_polygon3(points4, 22);
+	
+
+	vec3_t points5[10] = { {0.1f, .0f, .0f} , { .3f, .3f, .0f}, { .0f, .4f, .0f}  , { .3f, .5f, .0f}, 
+						   {.5f, .8f, .0f}, { .7f, 0.5f, .0f}, { 1.f, .4f, .0f}, { .7f, .3f, .0f},
+						   { 0.9f, 0.0f, .0f}, { .5f, 0.2f, .0f}};
+
+
+	poly_scene->meshes[4] = create_polygon3(points5, 10);
+	
+
+	vec3_t points6[46] = {  {.0f, 1.1f, .0f}, { .1f, 1.4f, .0f }, { .4f, 1.6f, .0f}  , { .9f, 1.7f, .0f}, 
+						 	{1.4f, 1.6f, .0f}, { 1.7f, 1.4f, .0f}, { 1.8f, 1.1f, .0f},   { 1.7f, .8f, .0f}, { 1.6f, .5f, .0f},
+						 	{1.7f, .4f, .0f}, { 1.5f, .3f, .0f}, { 1.4f, .4f, .0f} ,   { 1.2f, .4f, .0f}, { 1.3f, .2f, .0f}, 
+						 	{1.2f, .0f, .0f}, { 1.1f, .2f, .0f},  { 1.f, .0f, .0f},   { .9000002f, .2f, .0f},
+						 	{.9000002f, .3f, .0f}, { 1.000002f, 0.5f, .0f}, { 1.1000002f, 0.6f, .0f}, { 1.5f, 0.7f, .0f},
+							{1.3f, 0.9f, .0f}, { 1.f, .7f, .0f }, { 1.1f, .6f, .0f}  , { 1.f, .5f, .0f}, { .9f, .6f, .0f}, 
+						 	{0.8f, .5000003f, .0f}, { .7f, 0.6000003f, .0f}, { .8f, .7f, .0f},   { .5f, .9f, .0f}, { .3f, .7f, .0f},
+						 	{.7f, .6f, .0f}, { .8f, 0.5f, .0f}, {.9f, .3f, .0f} ,   { .9f, .2f, .0f}, { .8f, .0f, .0f}, 
+						 	{.7f, .2f, .0f}, { .6f, .0f, .0f},  { .5f, .2f, .0f},   { .6f, .4f, .0f}, { .4f, .4f, .0f}, 
+						 	{.3f, .3f, .0f}, { .1f, 0.4f, .0f}, { 0.2f, 0.5f, .0f}, { .1f, 0.8f, .0f}};
+
+
+	poly_scene->meshes[5] = create_polygon3(points6, 46);
+	
+
+	cRGB_t color = { 1.f, 0.f, 0.f };
+	mesh_set_color(poly_scene->meshes[0], &color);
+	mesh_set_color(poly_scene->meshes[1], &color);
+	mesh_set_color(poly_scene->meshes[2], &color);
+	mesh_set_color(poly_scene->meshes[3], &color);
+	mesh_set_color(poly_scene->meshes[4], &color);
+	color = (cRGB_t ){ 0.f, 0.f, 1.f };
+	mesh_set_color(poly_scene->meshes[5], &color);
+
+
+	translate_mesh(poly_scene->meshes[0], -2.5, 1.7f, 0.f);
+	translate_mesh(poly_scene->meshes[1], -1, 1.7f, 0.f);
+	translate_mesh(poly_scene->meshes[2], .5, 1.7f, 0.f);
+	translate_mesh(poly_scene->meshes[3], .5, -2.0f, 0.f);
+	translate_mesh(poly_scene->meshes[4], -1.5f, -2.0f, 0.f);
+	translate_mesh(poly_scene->meshes[5], -.7f, -0.5f, 0.1f);
+	
 	return poly_scene;
 
 }
