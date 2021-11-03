@@ -330,13 +330,15 @@ scene_t * scene_create_polys() {
 	mesh_set_color(poly_scene->meshes[5], &color);
 
 
-	translate_mesh(poly_scene->meshes[0], -2.5, 1.7f, 0.f);
+	translate_mesh(poly_scene->meshes[0], -5.5, 1.7f, 0.f);
 	translate_mesh(poly_scene->meshes[1], -1, 1.7f, 0.f);
 	translate_mesh(poly_scene->meshes[2], .5, 1.7f, 0.f);
 	translate_mesh(poly_scene->meshes[3], .5, -2.0f, 0.f);
 	translate_mesh(poly_scene->meshes[4], -1.5f, -2.0f, 0.f);
 	translate_mesh(poly_scene->meshes[5], -.7f, -0.5f, 0.1f);
 	
+	scale_mesh(poly_scene->meshes[0], 0.3f, 0.3f, 1.f);
+
 	return poly_scene;
 
 }
