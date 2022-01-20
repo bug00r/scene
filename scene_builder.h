@@ -31,6 +31,8 @@ scene_t * scene_create_raster(const float linelen);
 #endif
 scene_t * scene_create_texture_test();
 
+scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight);
+
 #if 0
 	//Creates a tree
 #endif

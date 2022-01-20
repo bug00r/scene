@@ -169,6 +169,39 @@ scene_t * scene_create_texture_test()
 	return scene;
 }
 
+scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight) 
+{
+	const vec3_t lb = {-1.f, -1.f, 0.f};
+	const vec3_t rb = {1.f, -1.f, 0.f};
+	const vec3_t lt = {-1.f, 1.f, 0.f};
+	const vec3_t rt = {1.f, 1.f, 0.f};
+	
+	scene_t * scene = alloc_scene(1);
+	//create_quad3(const vec3_t *lb, const vec3_t *rb, const vec3_t *lt, const vec3_t *rt)
+	scene->meshes[0] = create_quad3(&lb, &rb, &lt, &rt);//create_cube3_center(center, 0.25f);
+	
+	float aspect = (float)texHeight / (float)texWidth;
+
+	scene->meshes[0]->shapes[0]->texId = 0.f;
+	scene->meshes[0]->shapes[0]->vertices[0]->texCoord.x = 0.f;//0.f;
+	scene->meshes[0]->shapes[0]->vertices[0]->texCoord.y = 1.f;//0.f;
+	scene->meshes[0]->shapes[0]->vertices[1]->texCoord.x = 1.f;//1.f;
+	scene->meshes[0]->shapes[0]->vertices[1]->texCoord.y = 1.f;//0.f;
+	scene->meshes[0]->shapes[0]->vertices[2]->texCoord.x = 0.f;//0.f;
+	scene->meshes[0]->shapes[0]->vertices[2]->texCoord.y = 0.f;//1.f;
+
+	scene->meshes[0]->shapes[1]->texId = 0.f;                     
+	scene->meshes[0]->shapes[1]->vertices[0]->texCoord.x = 0.f;//0.f;
+	scene->meshes[0]->shapes[1]->vertices[0]->texCoord.y = 0.f;//1.f;
+	scene->meshes[0]->shapes[1]->vertices[1]->texCoord.x = 1.f;//1.f;
+	scene->meshes[0]->shapes[1]->vertices[1]->texCoord.y = 1.f;//0.f;
+	scene->meshes[0]->shapes[1]->vertices[2]->texCoord.x = 1.f;//1.f;
+	scene->meshes[0]->shapes[1]->vertices[2]->texCoord.y = 0.f;//1.f;
+
+	scale_scene(scene, 1.f, aspect, 1.f );
+	return scene;
+}
+
 scene_t * 
 scene_create_test_all(){
 	scene_t * scene = alloc_scene(9);
@@ -337,7 +370,7 @@ scene_t * scene_create_polys() {
 	translate_mesh(poly_scene->meshes[4], -1.5f, -2.0f, 0.f);
 	translate_mesh(poly_scene->meshes[5], -.7f, -0.5f, 0.1f);
 	
-	scale_mesh(poly_scene->meshes[0], 0.3f, 0.3f, 1.f);
+	scale_mesh(poly_scene->meshes[0], 0.3f, .6f, 1.f);
 
 	return poly_scene;
 
