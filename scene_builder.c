@@ -176,29 +176,33 @@ scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeigh
 	const vec3_t lt = {-1.f, 1.f, 0.f};
 	const vec3_t rt = {1.f, 1.f, 0.f};
 	
-	scene_t * scene = alloc_scene(1);
+	scene_t * scene = alloc_scene(2);
 	//create_quad3(const vec3_t *lb, const vec3_t *rb, const vec3_t *lt, const vec3_t *rt)
-	scene->meshes[0] = create_quad3(&lb, &rb, &lt, &rt);//create_cube3_center(center, 0.25f);
+	scene->meshes[1] = create_quad3(&lb, &rb, &lt, &rt);//create_cube3_center(center, 0.25f);
 	
 	float aspect = (float)texHeight / (float)texWidth;
 
-	scene->meshes[0]->shapes[0]->texId = 0.f;
-	scene->meshes[0]->shapes[0]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[0]->shapes[0]->vertices[0]->texCoord.y = 1.f;//0.f;
-	scene->meshes[0]->shapes[0]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[0]->shapes[0]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[0]->shapes[0]->vertices[2]->texCoord.x = 0.f;//0.f;
-	scene->meshes[0]->shapes[0]->vertices[2]->texCoord.y = 0.f;//1.f;
+	scene->meshes[1]->shapes[0]->texId = 0.f;
+	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.x = 0.f;//0.f;
+	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.y = 1.f;//0.f;
+	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.x = 1.f;//1.f;
+	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.y = 1.f;//0.f;
+	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.x = 0.f;//0.f;
+	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.y = 0.f;//1.f;
 
-	scene->meshes[0]->shapes[1]->texId = 0.f;                     
-	scene->meshes[0]->shapes[1]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[0]->shapes[1]->vertices[0]->texCoord.y = 0.f;//1.f;
-	scene->meshes[0]->shapes[1]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[0]->shapes[1]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[0]->shapes[1]->vertices[2]->texCoord.x = 1.f;//1.f;
-	scene->meshes[0]->shapes[1]->vertices[2]->texCoord.y = 0.f;//1.f;
+	scene->meshes[1]->shapes[1]->texId = 0.f;                     
+	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.x = 0.f;//0.f;
+	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.y = 0.f;//1.f;
+	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.x = 1.f;//1.f;
+	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.y = 1.f;//0.f;
+	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.x = 1.f;//1.f;
+	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.y = 0.f;//1.f;
 
-	scale_scene(scene, 1.f, aspect, 1.f );
+	scale_mesh(scene->meshes[1], 1.f, aspect, 1.f );
+
+	vec3_t center = { 0.f, 0.f, -1.5f };
+	scene->meshes[0] = create_cube3_center(&center, 1.f);
+
 	return scene;
 }
 
