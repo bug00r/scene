@@ -1,5 +1,73 @@
 #include "scene_builder.h"
 
+
+typedef struct {
+    vec2_t *charPos;
+	cRGB_t *color;
+	texture_t *texture;
+} __r_render_txt_ctx_t;
+
+static void __rf_text_render_func(float const * const x, float const * const y, void *data)
+{
+    __r_render_txt_ctx_t *ctx = data;
+    vec2_t *charPos = ctx->charPos;
+	cRGB_t *color = ctx->color;
+	texture_t *texture = ctx->texture;
+    long used_x = charPos->x + *x;
+    long used_y = ceilf((float)texture->height - charPos->y - *y);
+
+	//printf("y: %li = %i - %f - %f => %f\n", used_y, texture->height ,charPos->y ,*y, (float)texture->height - charPos->y - *y);
+
+	array_error_t err = crgb_array2D_set(texture->buffer, used_x, used_y, color);
+}
+
+static texture_t* __sceneb_create_text_tex(float glyphDetail, unsigned char const * const text, cRGB_t *txtColor )
+{
+	rf_provider_t* provider = get_default_provider();
+
+    rf_ctx_t rf_ctx;
+    rfont_init(&rf_ctx, provider);
+
+	//float glyphDetail = 120.f;
+	//char* text = "Hallo Welt !! :D";
+
+	rf_glyph_meta_t meta;
+	rfont_get_meta_str( &rf_ctx, &meta, text, glyphDetail);
+	
+	vec2_t charPos = {0.f, -meta.yOffsetChar};
+
+	unsigned int width = meta.alignedCharBox.xMax;
+	unsigned int height = meta.alignedCharBox.yMax;
+
+	texture_t *texture = texture_new(width, height);
+	cRGB_t clearcolor = { 1.f, 0.f, 1.f };
+	texture_clear(texture, &clearcolor);
+	__r_render_txt_ctx_t renderCtx = {&charPos, txtColor, texture}; 
+
+	rfont_raster_text(&rf_ctx, text, glyphDetail, __rf_text_render_func, &renderCtx);
+	//save_texture_normalized_ppm(texture, "test_glyph_tex.ppm");
+	return texture;
+}
+
+static mesh_t* __renderer_text_quad(texture_cache_t *texCache, float txtSize, float glyphDetail, unsigned char const * const text, cRGB_t *txtColor )
+{
+	texture_t *texture = __sceneb_create_text_tex(glyphDetail, text, txtColor);
+	
+	int texId = texture_cache_register(texCache, texture);
+
+	float txtunit_w = (float)texture->width * 0.01 * txtSize;
+	float txtunit_h = (float)texture->height * 0.01 * txtSize;
+	float whalf = txtunit_w * 0.5f;
+	float hhalf = txtunit_h * 0.5f;
+	const vec3_t lb = {-whalf, -hhalf, 0.f};
+	const vec3_t rb = {whalf, -hhalf, 0.f};
+	const vec3_t lt = {-whalf, hhalf, 0.f};
+	const vec3_t rt = {whalf, hhalf, 0.f};
+
+	return create_quad3_textured(&lb, &rb, &lt, &rt, texId);
+}
+
+
 scene_t * 
 scene_create_test() {
 	vec3_t center;
@@ -146,31 +214,40 @@ scene_t * scene_create_texture_test()
 	
 	scene->meshes[0] = create_cube3_center(center, 0.25f);
 	
+	vec2_t lttex = {0.f, 0.f};
+	vec2_t lbtex = {0.f, 1.f};
+	vec2_t rttex = {1.f, 0.f};
+	vec2_t rbtex = {1.f, 1.f};
+
 	for (unsigned int i = 0; i < scene->meshes[0]->cntShapes; ++i){
-		scene->meshes[0]->shapes[i]->texId = 0.f;
-		scene->meshes[0]->shapes[i]->vertices[0]->texCoord.x = 0.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[0]->texCoord.y = 1.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[1]->texCoord.x = 1.f;//1.f;
-		scene->meshes[0]->shapes[i]->vertices[1]->texCoord.y = 1.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[2]->texCoord.x = 0.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[2]->texCoord.y = 0.f;//1.f;
-											
-		++i;
-											
-		scene->meshes[0]->shapes[i]->texId = 0.f;                     
-		scene->meshes[0]->shapes[i]->vertices[0]->texCoord.x = 0.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[0]->texCoord.y = 0.f;//1.f;
-		scene->meshes[0]->shapes[i]->vertices[1]->texCoord.x = 1.f;//1.f;
-		scene->meshes[0]->shapes[i]->vertices[1]->texCoord.y = 1.f;//0.f;
-		scene->meshes[0]->shapes[i]->vertices[2]->texCoord.x = 1.f;//1.f;
-		scene->meshes[0]->shapes[i]->vertices[2]->texCoord.y = 0.f;//1.f;
+
+		shape_set_texture(scene->meshes[0]->shapes[i++], 0.f, &lbtex, &rbtex, &lttex);
+		shape_set_texture(scene->meshes[0]->shapes[i], 0.f, &lttex, &rbtex, &rttex);
+
 	}
 	
 	return scene;
 }
 
-scene_t * scene_create_text_quad(unsigned int texWidth, unsigned int texHeight, float size)
+scene_t * scene_create_text_quad(texture_cache_t *texCache, float txtSize, float glyphDetail, unsigned char const * const text, cRGB_t *txtColor)
 {
+
+	//mesh_t* __renderer_text_quad(texture_cache_t *texCache, float glyphDetail, (unsigned char const * const)text, cRGB_t *txtColor);
+
+	scene_t * scene = alloc_scene(3);
+	scene->meshes[1] = __renderer_text_quad(texCache, txtSize, glyphDetail, text, txtColor);
+
+	scene->meshes[2] = __renderer_text_quad(texCache, 0.25, 120.f, (unsigned char const * const)"text 2 :D", txtColor);
+
+	translate_mesh(scene->meshes[2], 0.f, -0.5f, 0.f);
+
+	vec3_t center = { 0.f, 0.f, -1.5f };
+	scene->meshes[0] = create_cube3_center(&center, 1.f);
+
+	return scene;
+	/*
+
+
 	float txtunit_w = (float)texWidth * 0.01 * size;
 	float txtunit_h = (float)texHeight * 0.01 * size;
 	float whalf = txtunit_w * 0.5f;
@@ -181,31 +258,13 @@ scene_t * scene_create_text_quad(unsigned int texWidth, unsigned int texHeight, 
 	const vec3_t rt = {whalf, hhalf, 0.f};
 	
 	scene_t * scene = alloc_scene(2);
-	//create_quad3(const vec3_t *lb, const vec3_t *rb, const vec3_t *lt, const vec3_t *rt)
-	scene->meshes[1] = create_quad3(&lb, &rb, &lt, &rt);//create_cube3_center(center, 0.25f);
-	
-	float aspect = (float)texHeight / (float)texWidth;
 
-	scene->meshes[1]->shapes[0]->texId = 0.f;
-	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.y = 0.f;//1.f;
-
-	scene->meshes[1]->shapes[1]->texId = 0.f;                     
-	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.y = 0.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.y = 0.f;//1.f;
+	scene->meshes[1] = create_quad3_textured(&lb, &rb, &lt, &rt, 0);
 
 	vec3_t center = { 0.f, 0.f, -1.5f };
 	scene->meshes[0] = create_cube3_center(&center, 1.f);
 
-	return scene;
+	return scene;*/
 }
 
 scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight, float scalex, float scaley) 
@@ -217,25 +276,9 @@ scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeigh
 	
 	scene_t * scene = alloc_scene(2);
 	//create_quad3(const vec3_t *lb, const vec3_t *rb, const vec3_t *lt, const vec3_t *rt)
-	scene->meshes[1] = create_quad3(&lb, &rb, &lt, &rt);//create_cube3_center(center, 0.25f);
+	scene->meshes[1] = create_quad3_textured(&lb, &rb, &lt, &rt, 0);;//create_cube3_center(center, 0.25f);
 	
 	float aspect = (float)texHeight / (float)texWidth;
-
-	scene->meshes[1]->shapes[0]->texId = 0.f;
-	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[0]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[0]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[0]->vertices[2]->texCoord.y = 0.f;//1.f;
-
-	scene->meshes[1]->shapes[1]->texId = 0.f;                     
-	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.x = 0.f;//0.f;
-	scene->meshes[1]->shapes[1]->vertices[0]->texCoord.y = 0.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[1]->texCoord.y = 1.f;//0.f;
-	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.x = 1.f;//1.f;
-	scene->meshes[1]->shapes[1]->vertices[2]->texCoord.y = 0.f;//1.f;
 
 	scale_mesh(scene->meshes[1], 1.f * scalex, aspect *scaley, 1.f );
 
@@ -419,8 +462,9 @@ scene_t * scene_create_polys() {
 
 }
 
+
 scene_t * 
-scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
+scene_create_waterfall_diagram(texture_cache_t *texCache, float *_array, uint32_t _rows, uint32_t _cols) {
 	scene_t * scene = alloc_scene(7 + _cols + _cols + _rows + _rows);
 	uint32_t cntMesh = 0;
 	//scene->meshes[0] = create_raster(5.f);
@@ -432,6 +476,11 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 	mesh_create_bbox(map);
 	mesh_color_by_bbox2(map);
 	
+	char buffer[20];
+	mat3_t * roty_mat = create_rot_y_mat(180.f);
+	mat3_t * rotx_mat = create_rot_x_mat(90.f);
+	cRGB_t txtCol = { 1.f, 1.f, 1.f };
+
 	cRGB_t line_col = { .5f, .5f, .5f };
 	for(unsigned int shape = 0; shape < map->cntShapes; ++shape){
 		shape_t * curshape = map->shapes[shape];
@@ -499,8 +548,15 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 			mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 			start.z -= 0.2f;
-			scene->meshes[cntMesh] = create_point3(&start);
-			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+			//scene->meshes[cntMesh] = create_point3(&start);
+			//mesh_set_color (scene->meshes[cntMesh++], &line_col);
+			itoa(cur_col + 1, buffer, 10);
+			//printf("converted: %s\n", buffer);
+			scene->meshes[cntMesh] = __renderer_text_quad(texCache, 0.25, 80.f, (unsigned char const * const)buffer, &txtCol);
+			mat_mul_mesh(scene->meshes[cntMesh], roty_mat);
+			mat_mul_mesh(scene->meshes[cntMesh], rotx_mat);
+			translate_mesh(scene->meshes[cntMesh++], start.x, start.y, start.z);
+			
 		}
 		
 
@@ -521,11 +577,20 @@ scene_create_waterfall_diagram(float *_array, uint32_t _rows, uint32_t _cols) {
 			mesh_set_color (scene->meshes[cntMesh++], &line_col);
 
 			start.x -= 0.2f;
-			scene->meshes[cntMesh] = create_point3(&start);
-			mesh_set_color (scene->meshes[cntMesh++], &line_col);
+			//scene->meshes[cntMesh] = create_point3(&start);
+			//mesh_set_color (scene->meshes[cntMesh++], &line_col);
+			itoa(cur_row + 1, buffer, 10);
+			//printf("converted: %s\n", buffer);
+			scene->meshes[cntMesh] = __renderer_text_quad(texCache, 0.25, 80.f, (unsigned char const * const)buffer, &txtCol);
+			mat_mul_mesh(scene->meshes[cntMesh], roty_mat);
+			mat_mul_mesh(scene->meshes[cntMesh], rotx_mat);
+			translate_mesh(scene->meshes[cntMesh++], start.x, start.y, start.z);
 		}
 		
 	}
+
+	free(rotx_mat);
+	free(roty_mat);
 
 	return scene;
 }

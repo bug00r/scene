@@ -12,6 +12,10 @@
 #include "vec.h"
 #include "mesh_builder.h"
 #include "scene.h"
+#include "texture_cache.h"
+#include "r_font.h"
+#include "font_provider_default.h"
+
 
 #if 0
 	//This screate a simple testscene inclunding some geometric components
@@ -32,7 +36,7 @@ scene_t * scene_create_raster(const float linelen);
 scene_t * scene_create_texture_test();
 
 scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight, float scalex, float scaley);
-scene_t * scene_create_text_quad(unsigned int texWidth, unsigned int texHeight, float size);
+scene_t * scene_create_text_quad(texture_cache_t *texCache, float txtSize, float glyphDetail, unsigned char const * const text, cRGB_t *txtColor);
 
 #if 0
 	//Creates a tree
@@ -47,6 +51,6 @@ scene_t * scene_create_polys();
 #if 0
 	//creates waterfall from float array
 #endif
-scene_t * scene_create_waterfall_diagram(float *array, uint32_t rows, uint32_t cols);
+scene_t * scene_create_waterfall_diagram(texture_cache_t *texCache, float *array, uint32_t rows, uint32_t cols);
 
 #endif

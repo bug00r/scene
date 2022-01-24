@@ -59,9 +59,9 @@ INCLUDEDIR=$(INCLUDE) -I.
 LIBNAME=libscene.a
 OBJS=$(BUILDPATH)scene.o $(BUILDPATH)scene_builder.o
 
-TESTSRC=test_scene.c
+TESTSRC=test_scene.c font_provider_default.c
 TESTBIN=test_scene.exe
-TESTLIB=-lscene -lmesh -lshape -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
+TESTLIB=-lscene -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
 TESTLIBDIR=-L$(BUILDDIR) $(LIB)
 
 all: mkbuilddir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test
