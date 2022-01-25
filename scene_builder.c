@@ -72,7 +72,8 @@ scene_t *
 scene_create_test() {
 	vec3_t center;
 	const float sidelen = .3f;
-	scene_t * scene = alloc_scene(42);
+	uint32_t cntMesh = 42;
+	scene_t * scene = alloc_scene(cntMesh);
 	scene->meshes[40] = create_raster(6.f);
 	scene->meshes[41] = create_point_raster();
 	scene->meshes[29] = createsphere(0.2f, 28, 28);
@@ -167,6 +168,11 @@ scene_create_test() {
 	center = (vec3_t) { 0.5f, 0.5f, -0.5f };
 	scene->meshes[26] = create_cube3_center(&center, sidelen);//create_raster(2.f);
 	
+	for ( uint32_t curMesh = 0; curMesh < cntMesh; curMesh++ )
+	{
+		mesh_create_bbox(scene->meshes[curMesh]);
+	}
+
 	return scene;
 	
 }
