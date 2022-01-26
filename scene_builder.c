@@ -79,13 +79,13 @@ scene_create_test() {
 	scene->meshes[29] = createsphere(0.2f, 28, 28);
 	translate_mesh(scene->meshes[29], -2.f, .0f, -1.f);
 	scene->meshes[30] = createsphere(0.1f, 28, 28);
-	translate_mesh(scene->meshes[30], -1.5f, .0f, -1.f);
+	translate_mesh(scene->meshes[30], -3.5f, .0f, -1.f);
 	scene->meshes[31] = createsphere(0.3f, 28, 28);
-	translate_mesh(scene->meshes[31], -1.f, .0f, -1.f);
+	translate_mesh(scene->meshes[31], -2.f, .0f, -1.f);
 	scene->meshes[32] = createsphere(0.5f, 28, 28);
-	translate_mesh(scene->meshes[32], -2.f, .0f, 1.f);
+	translate_mesh(scene->meshes[32], -2.f, .0f, 2.f);
 	scene->meshes[33] = createsphere(0.2f, 28, 28);
-	translate_mesh(scene->meshes[33], -1.5f, .0f, 1.f);
+	translate_mesh(scene->meshes[33], -1.5f, .0f, 15.f);
 	scene->meshes[34] = createsphere(0.8f, 28, 28);
 	translate_mesh(scene->meshes[34], -1.f, .0f, 1.f);
 	scene->meshes[35] = createsphere(0.5f, 28, 28);
@@ -102,8 +102,8 @@ scene_create_test() {
 	scene->meshes[27] = createsphere(0.5f, 10, 10);
 	scene->meshes[28] = createsphere(0.5f, 10, 10);
 	scale_mesh(scene->meshes[28], 1.f, .1f, 1.f);
-	translate_mesh(scene->meshes[27], -1.5f, .0f, 0.f);
-	translate_mesh(scene->meshes[28], 1.5f, .0f, 0.f);
+	translate_mesh(scene->meshes[27], -4.5f, .0f, 0.f);
+	translate_mesh(scene->meshes[28], 5.5f, .0f, 0.f);
 
 	center = (vec3_t) { 0.0f, 0.0f, 0.0f };
 	scene->meshes[0] = create_cube3_center(&center, sidelen);//create_raster(2.f);
@@ -300,46 +300,48 @@ scene_create_test_all(){
 	vec3_t center = { 0.f, 0.f, 0.f };
 	scene->meshes[0] = create_cube3_center(&center, .2f);
 	
+	float distance = 1.f;
+
 	mesh_create_bbox(scene->meshes[0]);
 	mesh_color_by_bbox(scene->meshes[0]);
 	
 	scene->meshes[1] = createsphere(0.2f, 50, 50);
-	translate_mesh(scene->meshes[1], 0.f, 0.f, .5f);
+	translate_mesh(scene->meshes[1], 0.f, 0.f, distance);
 	
 	mesh_create_bbox(scene->meshes[1]);
 	mesh_color_by_bbox(scene->meshes[1]);
 	
 	scene->meshes[2] = createcylinder(0.2f, .3f, 30, 30, true, true);
-	translate_mesh(scene->meshes[2], 0.f, 0.f, -.5f);
+	translate_mesh(scene->meshes[2], 0.f, 0.f, -distance);
 	
 	mesh_create_bbox(scene->meshes[2]);
 	mesh_color_by_bbox(scene->meshes[2]);
 	
 	scene->meshes[3] = createcone(0.2f, .3f, 10, true);
-	translate_mesh(scene->meshes[3], -.5f, 0.f, 0.f);
+	translate_mesh(scene->meshes[3], -distance, 0.f, 0.f);
 	
 	mesh_create_bbox(scene->meshes[3]);
 	mesh_color_by_bbox(scene->meshes[3]);
 	
-	center = (vec3_t){ .5f, 0.f, 0.f };
+	center = (vec3_t){ distance, 0.f, 0.f };
 	scene->meshes[4] = create_square_block(&center, 0.2f, 0.25f, 0.3f, 1, 2, 3);
 	
 	mesh_create_bbox(scene->meshes[4]);
 	mesh_color_by_bbox(scene->meshes[4]);
 	
-	center = (vec3_t){ .5f, 0.f, .5f };
+	center = (vec3_t){ distance, 0.f, distance };
 	scene->meshes[5] = create_square_block(&center, 0.2f, 0.3f, 0.25f, 1, 3, 2);
 	
 	mesh_create_bbox(scene->meshes[5]);
 	mesh_color_by_bbox(scene->meshes[5]);
 	
-	center = (vec3_t){ -.5f, 0.f, .5f };
+	center = (vec3_t){ -distance, 0.f, distance };
 	scene->meshes[6] = create_square_block(&center, 0.25f, 0.2f, 0.3f, 2, 1, 3);
 	
 	mesh_create_bbox(scene->meshes[6]);
 	mesh_color_by_bbox(scene->meshes[6]);
 	
-	center = (vec3_t){ .5f, 0.f, -.5f };
+	center = (vec3_t){ distance, 0.f, -distance };
 	scene->meshes[7] = create_square_block(&center, 0.25f, 0.3f, 0.2f, 2, 3, 1);
 	
 	mesh_create_bbox(scene->meshes[7]);
@@ -350,8 +352,9 @@ scene_create_test_all(){
 	mat3_t * rotx_mat = create_rot_x_mat(225.f);
 	mat_mul_mesh(scene->meshes[8], rotx_mat);
 	free(rotx_mat);
-	translate_mesh(scene->meshes[8], -.5f, 0.f, -.5f );
-	
+	translate_mesh(scene->meshes[8], -distance, 0.f, -distance );
+	mesh_create_bbox(scene->meshes[8]);
+
 	return scene;
 }
 
