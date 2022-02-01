@@ -49,39 +49,38 @@ CFLAGS+=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra $(debug)
 #-ggdb
 #-pg for profiling 
 
-LIB?=-L/c/dev/lib$(BIT_SUFFIX)
+LIBSDIR?=-L/c/dev/lib$(BIT_SUFFIX)
 INCLUDE?=-I/c/dev/include -I.
 
-SRC=scene.c scene_builder.c
+NAME=scene
+SRC=$(NAME).c scene_builder.c
 
 INCLUDEDIR=$(INCLUDE) -I.
 
-LIBNAME=libscene.a
+LIBNAME=lib$(NAME).a
+LIB=$(BUILDPATH)$(LIBNAME)
+
 OBJS=$(BUILDPATH)scene.o $(BUILDPATH)scene_builder.o
 
-TESTSRC=test_scene.c font_provider_default.c
-TESTBIN=test_scene.exe
-TESTLIB=-lscene -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
-TESTLIBDIR=-L$(BUILDDIR) $(LIB)
+TESTBIN=$(BUILDPATH)test_$(NAME).exe
+TESTLIB=-l$(NAME) -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
+TESTLIBDIR=-L$(BUILDDIR) $(LIBSDIR)
 
-all: mkbuilddir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test
+all: mkbuilddir $(LIB) $(TESTBIN)
 
-$(BUILDPATH)$(LIBNAME): $(OBJS)
-	$(AR) $(ARFLAGS) $(BUILDPATH)$(LIBNAME) $(OBJS)
+$(LIB): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
 
-$(BUILDPATH)scene_builder.o: scene_builder.c scene_builder.h
-	$(CC) $(CFLAGS) -c scene_builder.c -o $(BUILDPATH)scene_builder.o  $(INCLUDEDIR) $(debug)
-
-$(BUILDPATH)scene.o: scene.c scene.h
-	$(CC) $(CFLAGS) -c scene.c -o $(BUILDPATH)scene.o $(INCLUDEDIR) $(debug)
+$(OBJS):
+	$(CC) $(CFLAGS) -c $(@F:.o=.c) -o $@ $(INCLUDEDIR)
 	
-$(BUILDPATH)$(TESTBIN):
-	$(CC) $(CFLAGS) $(TESTSRC) -o $(BUILDPATH)$(TESTBIN) $(INCLUDEDIR) $(TESTLIBDIR) $(TESTLIB) $(debug)
+$(TESTBIN): $(LIB)
+	$(CC) $(CFLAGS) $(@F:.exe=.c) font_provider_default.c -o $@ $(INCLUDEDIR) $(TESTLIBDIR) $(TESTLIB)
 	
 .PHONY: clean mkbuilddir test
 
 test:
-	./$(BUILDPATH)$(TESTBIN)
+	./$(TESTBIN)
 
 mkbuilddir:
 	mkdir -p $(BUILDDIR)
@@ -92,6 +91,6 @@ clean:
 install:
 	mkdir -p $(INSTALL_ROOT)include
 	mkdir -p $(INSTALL_ROOT)lib$(BIT_SUFFIX)
-	cp ./scene.h $(INSTALL_ROOT)include/scene.h
-	cp ./scene_builder.h $(INSTALL_ROOT)include/scene_builder.h
-	cp $(BUILDPATH)$(LIBNAME) $(INSTALL_ROOT)lib$(BIT_SUFFIX)/$(LIBNAME)
+	cp ./$(NAME).h $(INSTALL_ROOT)include$(PATHSEP)$(NAME).h
+	cp ./$(NAME)_builder.h $(INSTALL_ROOT)include$(PATHSEP)$(NAME)_builder.h
+	cp $(LIB) $(INSTALL_ROOT)lib$(BIT_SUFFIX)$(PATHSEP)$(LIBNAME)

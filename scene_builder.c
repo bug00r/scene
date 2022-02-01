@@ -295,12 +295,10 @@ scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeigh
 }
 
 scene_t * 
-scene_create_test_all(){
+scene_create_test_all(float distance){
 	scene_t * scene = alloc_scene(9);
 	vec3_t center = { 0.f, 0.f, 0.f };
 	scene->meshes[0] = create_cube3_center(&center, .2f);
-	
-	float distance = 1.f;
 
 	mesh_create_bbox(scene->meshes[0]);
 	mesh_color_by_bbox(scene->meshes[0]);

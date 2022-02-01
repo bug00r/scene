@@ -22,7 +22,7 @@
 #endif
 scene_t * scene_create_test();
 scene_t * scene_create_test_cube();
-scene_t * scene_create_test_all();
+scene_t * scene_create_test_all(float distance);
 scene_t * scene_create_triangle();
 scene_t * scene_create_test_point_raster();
 #if 0
