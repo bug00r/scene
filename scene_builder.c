@@ -16,9 +16,8 @@ static void __rf_text_render_func(float const * const x, float const * const y, 
     long used_x = charPos->x + *x;
     long used_y = ceilf((float)texture->height - charPos->y - *y);
 
-	//printf("y: %li = %i - %f - %f => %f\n", used_y, texture->height ,charPos->y ,*y, (float)texture->height - charPos->y - *y);
-
 	array_error_t err = crgb_array2D_set(texture->buffer, used_x, used_y, color);
+	(void)(err);
 }
 
 static texture_t* __sceneb_create_text_tex(float glyphDetail, unsigned char const * const text, cRGB_t *txtColor )
@@ -27,9 +26,6 @@ static texture_t* __sceneb_create_text_tex(float glyphDetail, unsigned char cons
 
     rf_ctx_t rf_ctx;
     rfont_init(&rf_ctx, provider);
-
-	//float glyphDetail = 120.f;
-	//char* text = "Hallo Welt !! :D";
 
 	rf_glyph_meta_t meta;
 	rfont_get_meta_str( &rf_ctx, &meta, text, glyphDetail);
