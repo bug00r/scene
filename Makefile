@@ -47,8 +47,6 @@ OBJS=$(BUILDPATH)scene.o $(BUILDPATH)scene_builder.o
 TESTBIN=$(BUILDPATH)test_$(NAME).exe
 LDFLAGS+=-l$(NAME) -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
 
-
-
 all: mkbuilddir $(LIB)
 
 $(LIB): $(OBJS)
