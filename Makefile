@@ -33,13 +33,13 @@ ifeq ($(M32),1)
 	BIT_SUFFIX+=32
 endif
 
-CFLAGS+=-std=c11 -Wall 
+override CFLAGS+=-std=c11 -Wall 
 #-Wpedantic -pedantic-errors -Wall -Wextra
 #-ggdb
 #-pg for profiling 
 
-LDFLAGS+=-L/c/dev/lib$(BIT_SUFFIX) -L$(BUILDDIR)
-CFLAGS+=-I/c/dev/include -I.
+override LDFLAGS+=-L/c/dev/lib$(BIT_SUFFIX) -L$(BUILDDIR)
+override CFLAGS+=-I/c/dev/include -I.
 
 NAME=scene
 SRC=$(NAME).c scene_builder.c
@@ -50,7 +50,8 @@ LIB=$(BUILDPATH)$(LIBNAME)
 OBJS=$(BUILDPATH)scene.o $(BUILDPATH)scene_builder.o
 
 TESTBIN=$(BUILDPATH)test_$(NAME).exe
-LDFLAGS+=-l$(NAME) -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
+
+override LDFLAGS+=-l$(NAME) -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
 
 all: mkbuilddir $(LIB)
 
