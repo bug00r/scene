@@ -14,8 +14,8 @@
 
 typedef struct {
 	int cntMesh;
-	mesh_t ** meshes;
-} scene_t;
+	Mesh ** meshes;
+} Scene;
 
 extern const size_t scene_size;
 
@@ -24,14 +24,14 @@ extern const size_t scene_size;
 		This function allocates and init mesh instance with given shapecount.
 	*/
 #endif
-scene_t * alloc_scene(const unsigned int meshcount);
+Scene * alloc_scene(const unsigned int meshcount);
 
 #if 0
 	/**
 		This function frees all memory from using shape.
 	*/
 #endif
-void free_scene(scene_t *scene);
+void free_scene(Scene *scene);
 
 
 #if 0
@@ -39,19 +39,19 @@ void free_scene(scene_t *scene);
 		multiplies every mesh of scene coords with given matrix like transform or roation one
 	*/
 #endif
-void mat_mul_scene(scene_t * scene, const mat3_t * matrix);
+void mat_mul_scene(Scene * scene, const Mat3 * matrix);
 #if 0
 	/**
 		scales scene
 	*/
 #endif
-void scale_scene(scene_t * scene, const float scalex, const float scaley, const float scalez );
+void scale_scene(Scene * scene, const float scalex, const float scaley, const float scalez );
 
 #if 0
 	/**
 		translate scene
 	*/
 #endif
-void translate_scene(scene_t * scene, const float tx, const float ty, const float tz );
+void translate_scene(Scene * scene, const float tx, const float ty, const float tz );
 
 #endif

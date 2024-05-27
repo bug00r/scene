@@ -20,37 +20,37 @@
 #if 0
 	//This screate a simple testscene inclunding some geometric components
 #endif
-scene_t * scene_create_test();
-scene_t * scene_create_test_cube();
-scene_t * scene_create_test_all(float distance);
-scene_t * scene_create_triangle();
-scene_t * scene_create_test_point_raster();
+Scene * scene_create_test();
+Scene * scene_create_test_cube();
+Scene * scene_create_test_all(float distance);
+Scene * scene_create_triangle();
+Scene * scene_create_test_point_raster();
 #if 0
 	//This screate a raster from lines
 #endif
-scene_t * scene_create_raster(const float linelen);
+Scene * scene_create_raster(const float linelen);
 
 #if 0
 	//Creates a texture Quad/Cube scenery
 #endif
-scene_t * scene_create_texture_test();
+Scene * scene_create_Textureest();
 
-scene_t * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight, float scalex, float scaley);
-scene_t * scene_create_text_quad(texture_cache_t *texCache, float txtSize, float glyphDetail, unsigned char const * const text, cRGB_t *txtColor);
+Scene * scene_create_texture_quad(unsigned int texWidth, unsigned int texHeight, float scalex, float scaley);
+Scene * scene_create_text_quad(TextureCache *texCache, float txtSize, float glyphDetail, unsigned char const * const text, ColorRGB *txtColor);
 
 #if 0
 	//Creates a tree
 #endif
-scene_t * scene_create_tree();
+Scene * scene_create_tree();
 
 #if 0
 	//Creates a polygon
 #endif
-scene_t * scene_create_polys();
+Scene * scene_create_polys();
 
 #if 0
 	//creates waterfall from float array
 #endif
-scene_t * scene_create_waterfall_diagram(texture_cache_t *texCache, float *array, uint32_t rows, uint32_t cols);
+Scene * scene_create_waterfall_diagram(TextureCache *texCache, float *array, uint32_t rows, uint32_t cols);
 
 #endif
