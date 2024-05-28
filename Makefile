@@ -39,7 +39,7 @@ override CFLAGS+=-std=c11 -Wall
 #-pg for profiling 
 
 override LDFLAGS+=-L/c/dev/lib$(BIT_SUFFIX) -L$(BUILDDIR)
-override CFLAGS+=-I/c/dev/include -I.
+override CFLAGS+=-I. -I/c/dev/include 
 
 NAME=scene
 SRC=$(NAME).c scene_builder.c
