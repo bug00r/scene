@@ -465,6 +465,10 @@ Scene * scene_create_polys() {
 
 }
 
+static void scene_itoa(int value, char* str, int bufflen)
+{
+	snprintf(str, bufflen, "%d", value);
+}
 
 Scene * 
 scene_create_waterfall_diagram(TextureCache *texCache, float *_array, uint32_t _rows, uint32_t _cols) {
@@ -553,7 +557,8 @@ scene_create_waterfall_diagram(TextureCache *texCache, float *_array, uint32_t _
 			start.z -= 0.2f;
 			//scene->meshes[cntMesh] = create_point3(&start);
 			//mesh_set_color (scene->meshes[cntMesh++], &line_col);
-			itoa(cur_col + 1, buffer, 10);
+			//itoa(cur_col + 1, buffer, 10);
+			scene_itoa(cur_col + 1, buffer, 20);
 			//printf("converted: %s\n", buffer);
 			scene->meshes[cntMesh] = __Rendererext_quad(texCache, 0.25, 80.f, (unsigned char const * const)buffer, &txtCol);
 			mat_mul_mesh(scene->meshes[cntMesh], roty_mat);
@@ -582,7 +587,8 @@ scene_create_waterfall_diagram(TextureCache *texCache, float *_array, uint32_t _
 			start.x -= 0.2f;
 			//scene->meshes[cntMesh] = create_point3(&start);
 			//mesh_set_color (scene->meshes[cntMesh++], &line_col);
-			itoa(cur_row + 1, buffer, 10);
+			//itoa(cur_row + 1, buffer, 10);
+			scene_itoa(cur_row + 1, buffer, 20);
 			//printf("converted: %s\n", buffer);
 			scene->meshes[cntMesh] = __Rendererext_quad(texCache, 0.25, 80.f, (unsigned char const * const)buffer, &txtCol);
 			mat_mul_mesh(scene->meshes[cntMesh], roty_mat);

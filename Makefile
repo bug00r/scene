@@ -53,6 +53,16 @@ TESTBIN=$(BUILDPATH)test_$(NAME).exe
 
 override LDFLAGS+=-l$(NAME) -lr_font -lmesh -ltexture -lshape -lcrgb_array -larray -lcolor -lgeometry -lutilsmath -lmat -lvec -ldl_list  
 
+UNAME_S := $(shell uname -s)
+
+ifeq ($(OS), Windows_NT)
+	#nothing yet
+endif
+
+ifeq ($(UNAME_S), Linux) 
+	override LDFLAGS+=-lm
+endif
+
 all: mkbuilddir $(LIB)
 
 $(LIB): $(OBJS)
